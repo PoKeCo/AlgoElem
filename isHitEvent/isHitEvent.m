@@ -1,4 +1,5 @@
 function [hit]=isHitEvent( c_idxes, c_idxes_size, e_idxes, e_idxes_size, ego_idx )
+% Check that c_idxes contains e_idxes's path
     
     %% Backword check 
     
