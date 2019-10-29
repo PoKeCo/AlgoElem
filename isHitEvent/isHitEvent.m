@@ -2,7 +2,7 @@ function [hit]=isHitEvent( c_idxes, c_idxes_size, e_idxes, e_idxes_size, ego_idx
 % Check that c_idxes contains e_idxes's path
     
     %% Backword check 
-    
+    c_first_idx = c_idxes(1);
     % Set hit flag 
     hit=1;
     for e_ptr=e_idxes_size:-1:1
@@ -27,7 +27,7 @@ function [hit]=isHitEvent( c_idxes, c_idxes_size, e_idxes, e_idxes_size, ego_idx
             break; % If hit = 0 once, search finish. 
         end
         % If e_idx is reach to ego_idx then finish the search.
-        if( e_idx == ego_idx )
+        if( e_idx == ego_idx || e_idx == c_first_idx )
             break;
         end
     end    
