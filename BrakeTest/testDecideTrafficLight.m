@@ -20,7 +20,7 @@ DULATION_YELLOW= 4;
 YELLOW_TIME    = 4;
 
 ACC_GO      =  0.1*G;
-ACC_STOP    = -0.1*G;
+ACC_STOP    = -0.3*G;
 
 
 %trigger_pos  = -48.02923 ;
