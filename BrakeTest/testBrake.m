@@ -3,10 +3,12 @@ G=9.81;
 DELTA_T=0.001;
 MPS2KPH=3.6;
 KPH2MPS=1/3.6;
-a_max = 0.1*G;
+a_max = 0.0*G;
 a_min =-0.35*G;
-j_max = 0.1*G;
-j_min =-0.1*G;
+j_max = 0.3*G;
+j_min =-0.3*G;
+YELLOW_TIME=2.3;
+
 v0    =90*KPH2MPS;
 hist_size=1000000;
 hist=zeros(hist_size,6);
@@ -84,7 +86,7 @@ car.x;
 
 vd_size=101;
 vd=zeros(vd_size,3);
-YELLOW_TIME=3;
+once=1;
 for i=1:vd_size
     v =(i-1);
     v0=v*KPH2MPS;
@@ -92,13 +94,25 @@ for i=1:vd_size
     Te=(0-a_min)/j_max;
     ve=-a_min*Te-1/2*j_max*Te^2;
     vs=v0+a_max*Ts+1/2*j_min*Ts^2;   
-    d=v0*Ts+1/2*a_max*Ts^2+1/6*j_min*Ts^3+...
-        +(vs^2-ve^2)/(-2*a_min)...
-        +ve*Te+1/2*a_min*Te^2+1/6*j_max*Te^3;
-    vd(i,1)=-d;
+    db=-(v0*Ts+1/2*a_max*Ts^2+1/6*j_min*Ts^3+...
+         +(vs^2-ve^2)/(-2*a_min)...
+         +ve*Te+1/2*a_min*Te^2+1/6*j_max*Te^3);
+    dy=-v0*YELLOW_TIME;
+    vd(i,1)=db;
     vd(i,2)=v;
-    vd(i,3)=-v0*YELLOW_TIME;
+    vd(i,3)=dy;    
+    if( once && v>5 && db < dy )
+        once = 0;
+    end
 end
+ttl=sprintf('v_{max}=%3.1f[kph],G=-%3.2f:%3.2f[G], J=%3.2f:%3.2f[G/s], Y=%2.1f[sec]',v,-a_min/G,a_max/G,-j_min/G,j_max/G,YELLOW_TIME)
+fname=sprintf('Gm%3.2f_%3.2f_Jm%3.2f_%3.2f_Y%2.1f',-a_min/G,a_max/G,-j_min/G,j_max/G,YELLOW_TIME)
 figure(2);
 plot( vd(:,1), vd(:,2), '-' ,...
       vd(:,3), vd(:,2), '-' );
+title(ttl);
+saveas(2,[fname,'.eps'],'eps');
+saveas(2,[fname,'.jpg'],'jpg');
+  
+  
+  
